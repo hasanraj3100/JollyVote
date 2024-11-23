@@ -2,12 +2,18 @@ import {Link, router} from "@inertiajs/react";
 import OptionElement from "@/Pages/Polls/Partials/OptionElement.jsx";
 
 
-export default function Poll_forNewsFeed({ poll, key }) {
+export default function Poll_forNewsFeed({ poll }) {
 
     const {options} = poll;
 
-    // Calculate total votes for progress bar percentages
-    const totalVotes = options.reduce((sum, option) => sum + option.vote_count, 0);
+    const voteCounts = options.map(option => {
+        const count = poll.votes.filter(vote => vote.option_id === option.id).length;
+        return {
+            ...option, vote_count: count > 0 ? count : 0
+        }
+    });
+
+    const totalVotes = poll.votes.length;
     const viewThePost = () => {
         router.visit(`polls/${poll.slug}` , {
             preserveScroll: true
@@ -20,7 +26,7 @@ export default function Poll_forNewsFeed({ poll, key }) {
     }
 
     return (
-        <div className="flex justify-center bg-gray-100 " key={key}>
+        <div className="flex justify-center bg-gray-100 " >
             <div className="w-full max-w-2xl">
 
                 <div className="bg-white shadow-md rounded-lg p-6 mb-6 hover:bg-gray-100 hover:border-2 border-orange-600 transition duration-300">
@@ -35,7 +41,7 @@ export default function Poll_forNewsFeed({ poll, key }) {
                             </div>
                         </div>
 
-                    {poll.options.map(option => (
+                    {voteCounts.map(option => (
                         <OptionElement option={option} totalVotes={totalVotes} pollId={poll.id} key={option.id}/>
                     ))}
 

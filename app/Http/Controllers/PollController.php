@@ -17,19 +17,8 @@ class PollController extends Controller
 
     public function index() : Response
     {
-
-
         $polls = Poll::with(['options', 'votes', 'user'])
         ->where('public', true)->get();
-
-        foreach($polls as $poll) {
-            foreach($poll->options as $option) {
-                $option->vote_count = $option->votes->count();
-            }
-        }
-
-
-
 
         return Inertia::render('Polls/Index', ['polls' => $polls ? $polls : []]);
     }
@@ -77,10 +66,6 @@ class PollController extends Controller
     {
 
         $poll = Poll::with(['options', 'votes', 'user'])->where('slug', $slug)->firstOrFail();
-
-        foreach($poll->options as $option) {
-            $option->vote_count = $option->votes->count();
-        }
 
         return Inertia::render('Polls/Show', ['poll' => $poll]);
     }

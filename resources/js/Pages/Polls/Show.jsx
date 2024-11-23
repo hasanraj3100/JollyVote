@@ -7,7 +7,14 @@ import OptionElement from "@/Pages/Polls/Partials/OptionElement.jsx";
 export default function Show({ poll }) {
     const {title, options} = poll;
 
-    const totalVotes = options.reduce((sum, option) => sum + option.vote_count, 0);
+    const voteCounts = options.map(option => {
+        const count = poll.votes.filter(vote => vote.option_id === option.id).length;
+        return {
+            ...option, vote_count: count > 0 ? count : 0
+        }
+    });
+
+    const totalVotes = poll.votes.length;
 
 
     return (
@@ -24,7 +31,7 @@ export default function Show({ poll }) {
                 </p>
 
                 {/* Poll Options */}
-                {poll.options.map((option, index) => (
+                {voteCounts.map((option, index) => (
                     <OptionElement key={option.id} option={option} totalVotes={totalVotes} pollId={poll.id}/>
                 ))}
 

@@ -1,8 +1,6 @@
 import {useForm} from "@inertiajs/react";
 
 export default function OptionElement({option , totalVotes, pollId}) {
-
-
     const { data, setData, post, processing, errors} = useForm({
         'poll_id': pollId,
         'option_id': option.id
