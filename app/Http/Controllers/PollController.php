@@ -6,7 +6,6 @@ use App\Http\Requests\StorePollRequest;
 use App\Models\Poll;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -28,12 +27,9 @@ class PollController extends Controller
 
 
     public function store(StorePollRequest $request): RedirectResponse
-
     {
-
         DB::beginTransaction();
         try {
-
             $poll = Poll::create([
                 'title'=>$request->pollTitle,
                 'user_id'=> auth()->id()
@@ -46,7 +42,9 @@ class PollController extends Controller
             DB::commit();
 
             return redirect('/polls');
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e)
+        {
             DB::rollBack();
             dd($e->getMessage());
         }

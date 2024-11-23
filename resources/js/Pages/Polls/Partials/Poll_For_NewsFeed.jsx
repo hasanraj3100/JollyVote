@@ -18,7 +18,7 @@ export default function Poll_forNewsFeed({ poll }) {
     }
 
     return (
-        <div className="flex justify-center bg-gray-100  ">
+        <div className="flex justify-center bg-gray-100 ">
             <div className="w-full max-w-2xl">
 
                 <div className="bg-white shadow-md rounded-lg p-6 mb-6">
