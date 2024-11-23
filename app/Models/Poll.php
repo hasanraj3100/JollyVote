@@ -23,4 +23,10 @@ class Poll extends Model
     public function options():HasMany {
         return $this->hasMany(Option::class);
     }
+
+    public function votes(): HasMany
+    {
+        return $this->hasMany(Vote::class);
+    }
+
 }

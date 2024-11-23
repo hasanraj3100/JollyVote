@@ -2,8 +2,8 @@ import {Head, Link} from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 import Poll_forNewsFeed from "@/Pages/Polls/Partials/Poll_For_NewsFeed.jsx";
 
-export default function Index({ polls }) {
-    console.log(polls[0])
+export default function Index({ polls=[] }) {
+
     return (
         <AuthenticatedLayout
 

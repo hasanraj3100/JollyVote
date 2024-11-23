@@ -2,7 +2,7 @@ import {Link, router} from "@inertiajs/react";
 import OptionElement from "@/Pages/Polls/Partials/OptionElement.jsx";
 
 
-export default function Poll_forNewsFeed({ poll }) {
+export default function Poll_forNewsFeed({ poll, key }) {
 
     const {options} = poll;
 
@@ -18,10 +18,10 @@ export default function Poll_forNewsFeed({ poll }) {
     }
 
     return (
-        <div className="flex justify-center bg-gray-100 ">
+        <div className="flex justify-center bg-gray-100 " key={key}>
             <div className="w-full max-w-2xl">
 
-                <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+                <div className="bg-white shadow-md rounded-lg p-6 mb-6 hover:bg-gray-100 hover:border-2 border-orange-600 transition duration-300">
 
 
                         <div className="flex items-center mb-4 " onClick={viewThePost}>
@@ -34,7 +34,7 @@ export default function Poll_forNewsFeed({ poll }) {
                         </div>
 
                     {poll.options.map(option => (
-                        <OptionElement option={option} totalVotes={totalVotes}/>
+                        <OptionElement option={option} totalVotes={totalVotes} pollId={poll.id} key={option.id}/>
                     ))}
 
 

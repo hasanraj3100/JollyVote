@@ -1,10 +1,11 @@
 import {useForm} from "@inertiajs/react";
 
-export default function OptionElement({option , totalVotes}) {
+export default function OptionElement({option , totalVotes, pollId}) {
 
 
     const { data, setData, post, processing, errors} = useForm({
-        'id': option.id
+        'poll_id': pollId,
+        'option_id': option.id
     });
     const castVote = () => {
         console.log("click");
@@ -12,7 +13,7 @@ export default function OptionElement({option , totalVotes}) {
         post('/vote');
     }
     return (
-        <div className="mb-3">
+        <div className="mb-3" >
             {/* Option Progress Bar */}
             <div className="flex items-center justify-between">
                 <h3 className="text-gray-700 font-medium mb-2" onClick={castVote}>{option.title}</h3>

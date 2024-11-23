@@ -26,7 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/polls', [PollController::class, 'store'])->name('polls.store');
     Route::get('/polls/{poll}', [PollController::class, 'show'])->name('polls.show');
 
-    Route::post('/vote', [\App\Http\Controllers\OptionController::class, 'castVote']);
+    Route::post('/vote', [\App\Http\Controllers\VoteController::class, 'castVote']);
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

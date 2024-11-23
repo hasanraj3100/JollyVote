@@ -11,11 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('options', function (Blueprint $table) {
+        Schema::create('votes', function (Blueprint $table) {
             $table->id();
-            $table->string("title");
-            $table->foreignIdFor(\App\Models\Poll::class);
+            $table->foreignIdFor(\App\Models\User::class);
+            $table->foreignIdFor(\App\Models\Poll::class)->constrained()->onDelete('cascade');
+            $table->foreignIdFor(\App\Models\Option::class)->constrained()->onDelete('cascade');
             $table->timestamps();
+
+            $table->unique(['poll_id', 'user_id']);
         });
     }
 
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('options');
+        Schema::dropIfExists('votes');
     }
 };

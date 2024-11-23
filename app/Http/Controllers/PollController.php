@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePollRequest;
+use App\Models\Option;
 use App\Models\Poll;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,8 +16,20 @@ class PollController extends Controller
 
     public function index() : Response
     {
-        $polls = Poll::with('user')->with('options')->get();
-        return Inertia::render('Polls/Index', ['polls' => $polls]);
+
+
+        $polls = Poll::with(['options', 'votes', 'user'])->get();
+
+        foreach($polls as $poll) {
+            foreach($poll->options as $option) {
+                $option->vote_count = $option->votes->count();
+            }
+        }
+
+
+
+
+        return Inertia::render('Polls/Index', ['polls' => $polls ? $polls : []]);
     }
 
 
@@ -53,7 +66,11 @@ class PollController extends Controller
 
     public function show(Poll $poll): Response
     {
-        $poll->load('options')->load('user');
+        $poll->load(['options', 'votes', 'user']);
+        foreach($poll->options as $option) {
+            $option->vote_count = $option->votes->count();
+        }
+
         return Inertia::render('Polls/Show', ['poll' => $poll]);
     }
 
