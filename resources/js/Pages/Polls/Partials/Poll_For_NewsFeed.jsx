@@ -10,7 +10,6 @@ export default function Poll_forNewsFeed({ poll, key }) {
     const totalVotes = options.reduce((sum, option) => sum + option.vote_count, 0);
     const viewThePost = () => {
         router.visit(`polls/${poll.slug}` , {
-            preserveState: true,
             preserveScroll: true
         });
     }

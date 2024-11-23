@@ -10,7 +10,9 @@ export default function OptionElement({option , totalVotes, pollId}) {
     const castVote = () => {
         console.log("click");
 
-        post('/vote');
+        post('/vote', {
+            preserveScroll: true
+        });
     }
     return (
         <div className="mb-3" >

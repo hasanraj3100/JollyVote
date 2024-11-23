@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('title');
             $table->foreignIdFor(\App\Models\User::class);
+            $table->boolean('public')->default(false);
             $table->timestamps();
         });
     }

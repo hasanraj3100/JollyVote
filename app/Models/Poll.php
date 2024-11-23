@@ -15,7 +15,7 @@ class Poll extends Model
     /** @use HasFactory<\Database\Factories\PollFactory> */
     use HasFactory;
 
-    protected $fillable = ['title', 'user_id', 'slug',  'created_at', 'updated_at'];
+    protected $fillable = ['title', 'user_id', 'slug', 'public', 'created_at', 'updated_at'];
 
     public function user():BelongsTo {
         return $this->belongsTo(User::class);

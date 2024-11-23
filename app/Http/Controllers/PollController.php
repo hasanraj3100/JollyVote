@@ -19,7 +19,8 @@ class PollController extends Controller
     {
 
 
-        $polls = Poll::with(['options', 'votes', 'user'])->get();
+        $polls = Poll::with(['options', 'votes', 'user'])
+        ->where('public', true)->get();
 
         foreach($polls as $poll) {
             foreach($poll->options as $option) {
@@ -44,12 +45,14 @@ class PollController extends Controller
     {
         DB::beginTransaction();
         try {
-//            dd(Poll::generateSlug($request->pollTitle));
+
+            $is_public = $request->privacy === "public";
+
             $poll = Poll::create([
                 'slug' => Poll::generateSlug($request->pollTitle),
                 'title'=>$request->pollTitle,
                 'user_id'=> auth()->id(),
-
+                'public' => $is_public,
             ]);
 
 
@@ -74,7 +77,7 @@ class PollController extends Controller
     {
 
         $poll = Poll::with(['options', 'votes', 'user'])->where('slug', $slug)->firstOrFail();
-        
+
         foreach($poll->options as $option) {
             $option->vote_count = $option->votes->count();
         }
