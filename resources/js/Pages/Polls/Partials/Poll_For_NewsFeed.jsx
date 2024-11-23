@@ -9,7 +9,10 @@ export default function Poll_forNewsFeed({ poll, key }) {
     // Calculate total votes for progress bar percentages
     const totalVotes = options.reduce((sum, option) => sum + option.vote_count, 0);
     const viewThePost = () => {
-        router.visit(`polls/${poll.id}`);
+        router.visit(`polls/${poll.slug}` , {
+            preserveState: true,
+            preserveScroll: true
+        });
     }
 
     const viewTheAuthor = (e) => {
@@ -26,7 +29,7 @@ export default function Poll_forNewsFeed({ poll, key }) {
 
                         <div className="flex items-center mb-4 " onClick={viewThePost}>
                             <div className="ml-3">
-                                <h2 className="text-xl font-semibold">{poll.title}</h2>
+                                <h2 className="text-xl font-semibold hover:text-blue-400">{poll.title}</h2>
                                 <p className="text-sm text-gray-500 hover:text-blue-400" onClick={viewTheAuthor}>
                                     by {poll.user.name} · Posted on {new Date(poll.updated_at).toLocaleTimeString()}
                                 </p>
@@ -38,7 +41,7 @@ export default function Poll_forNewsFeed({ poll, key }) {
                     ))}
 
 
-                        <div className="flex items-center justify-between border-t pt-4">
+                        <div className="flex items-center justify-between border-t pt-4" onClick={viewThePost}>
 
                             <div className="flex items-center space-x-3 sm:space-x-6">
 

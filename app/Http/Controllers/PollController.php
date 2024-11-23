@@ -8,6 +8,7 @@ use App\Models\Poll;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -43,10 +44,14 @@ class PollController extends Controller
     {
         DB::beginTransaction();
         try {
+//            dd(Poll::generateSlug($request->pollTitle));
             $poll = Poll::create([
+                'slug' => Poll::generateSlug($request->pollTitle),
                 'title'=>$request->pollTitle,
-                'user_id'=> auth()->id()
+                'user_id'=> auth()->id(),
+
             ]);
+
 
             $poll->options()->createMany(
                 array_map( fn($option)=> ['title'=> $option['title']], $request->options)
@@ -64,9 +69,12 @@ class PollController extends Controller
 
     }
 
-    public function show(Poll $poll): Response
+
+    public function show($slug): Response
     {
-        $poll->load(['options', 'votes', 'user']);
+
+        $poll = Poll::with(['options', 'votes', 'user'])->where('slug', $slug)->firstOrFail();
+        
         foreach($poll->options as $option) {
             $option->vote_count = $option->votes->count();
         }
@@ -91,8 +99,5 @@ class PollController extends Controller
     }
 
 
-    public function rules() {
-
-    }
 
 }

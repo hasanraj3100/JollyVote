@@ -20,10 +20,6 @@ function CreatePoll() {
 
     const addOption = () => {
         setData("options", [...data.options, {title:"", id: data.options.length+1}]);
-        // setOptions((prevOptions) => [
-        //     ...prevOptions,
-        //     { id: prevOptions.length + 1, title: "" },
-        // ]);
     };
 
     const removeOption = (id) => {
