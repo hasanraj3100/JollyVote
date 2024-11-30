@@ -24,9 +24,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/polls', [PollController::class, 'index'])->name('polls.index');
     Route::get('/polls/create', [PollController::class, 'create'])->name('polls.create');
     Route::post('/polls', [PollController::class, 'store'])->name('polls.store');
+    Route::get('/polls/edit/{poll}', [PollController::class, 'edit'])->name('polls.edit');
+    Route::patch('/polls/{poll}', [PollController::class, 'update'])->name('polls.update');
     Route::get('/polls/{slug}', [PollController::class, 'show'])->name('polls.show');
 
     Route::post('/vote', [\App\Http\Controllers\VoteController::class, 'castVote']);
+
+    Route::post('/upvote', [\App\Http\Controllers\ReactionController::class, 'upvote']);
+    Route::post('/downvote', [\App\Http\Controllers\ReactionController::class, 'downvote']);
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

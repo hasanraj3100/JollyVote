@@ -32,7 +32,7 @@ export default function Show({ poll }) {
 
                 {/* Poll Options */}
                 {voteCounts.map((option, index) => (
-                    <OptionElement key={option.id} option={option} totalVotes={totalVotes} pollId={poll.id}/>
+                    <OptionElement key={option.id} option={option} totalVotes={totalVotes} pollId={poll.id} votes={poll.votes}/>
                 ))}
 
 

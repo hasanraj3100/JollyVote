@@ -1,8 +1,8 @@
-import {Link, router} from "@inertiajs/react";
+import {Link, router, usePage} from "@inertiajs/react";
 import OptionElement from "@/Pages/Polls/Partials/OptionElement.jsx";
 
 
-export default function Poll_forNewsFeed({ poll }) {
+export default function Poll_forNewsFeed({poll}) {
 
     const {options} = poll;
 
@@ -15,7 +15,7 @@ export default function Poll_forNewsFeed({ poll }) {
 
     const totalVotes = poll.votes.length;
     const viewThePost = () => {
-        router.visit(`polls/${poll.slug}` , {
+        router.visit(`polls/${poll.slug}`, {
             preserveScroll: true
         });
     }
@@ -25,12 +25,45 @@ export default function Poll_forNewsFeed({ poll }) {
         router.visit(`users/2`);
     }
 
+    const upvote = (e) => {
+        console.log("clicked");
+        router.post('/upvote', {'poll_id': poll.id}, {
+            onSuccess: (page) => {
+                console.log("Upvoted casted");
+            },
+            onError: (errors) => {
+                console.error('Error occured while upvoting: ', errors);
+            },
+            preserveScroll: true,
+        });
+    }
+
+    const downvote = (e) => {
+        router.post("/downvote", {'poll_id': poll.id}, {
+            onSuccess: (page) => {
+                console.log("Downvote Casted");
+            },
+            onError: (errors) => {
+                console.error('Error occured while downvoting: ', errors);
+            },
+            preserveScroll: true
+        });
+    }
+
+
+
+
+    const {auth} = usePage().props;
+    const currentUserID = auth?.user?.id;
+    const userReaction = poll.reactions.find(reaction => reaction.user_id === currentUserID)?.type;
+    const upvoteCount = poll.reactions.filter(reaction => reaction.type === 'upvote').length;
+    const downvoteCount = poll.reactions.filter(reaction => reaction.type === 'downvote').length;
 
     return (
         <div className="flex justify-center bg-gray-100">
             <div className="w-full max-w-2xl">
                 <div
-                    className="bg-white shadow-md rounded-lg p-6 mb-6 hover:bg-gray-100 hover:border-2 border-orange-600 transition duration-300">
+                    className="bg-white shadow-md rounded-lg p-6 mb-6 border-2 border-transparent hover:bg-gray-100 hover:border-gray-600 transition duration-100">
                     <div className="flex items-center mb-4" onClick={viewThePost}>
                         <div className="ml-3">
                             <h2 className="text-xl font-semibold hover:text-blue-400">{poll.title}</h2>
@@ -45,22 +78,31 @@ export default function Poll_forNewsFeed({ poll }) {
                     </div>
 
                     {voteCounts.map((option) => (
-                        <OptionElement key={option.id} option={option} totalVotes={totalVotes} pollId={poll.id} votes={poll.votes}/>
+                        <OptionElement key={option.id} option={option} totalVotes={totalVotes} pollId={poll.id}
+                                       votes={poll.votes}/>
                     ))}
 
                     <div
                         className="flex items-center justify-between border-t pt-4"
-                        onClick={viewThePost}
+
                     >
                         <div className="flex items-center space-x-3 sm:space-x-6">
                             <button
-                                className="flex items-center space-x-2 rounded-lg p-2 hover:shadow-lg hover:bg-green-100 transition duration-200">
+                                className={`flex items-center space-x-2 rounded-lg p-2 transition duration-200 ${
+                                    userReaction === 'upvote'
+                                        ? 'bg-green-100 shadow-lg'
+                                        : 'hover:shadow-lg hover:bg-green-100'
+                                }`}
+                                onClick={upvote}
+                            >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    className="h-6 w-6 text-green-500"
-                                    fill="none"
+                                    className={`h-6 w-6 ${
+                                        userReaction === 'upvote' ? 'text-green-700' : 'text-green-500'
+                                    }`}
+                                    fill={userReaction === 'upvote' ? 'currentColor' : 'none'}
                                     viewBox="0 0 24 24"
-                                    stroke="currentColor"
+                                    stroke={userReaction === 'upvote' ? 'none' : 'currentColor'}
                                 >
                                     <path
                                         strokeLinecap="round"
@@ -69,20 +111,39 @@ export default function Poll_forNewsFeed({ poll }) {
                                         d="M5 15l7-7 7 7"
                                     ></path>
                                 </svg>
-                                <span className="font-medium text-gray-700 text-sm sm:inline-flex hidden sm:text-base">
-                            Upvote
-                        </span>
-                                <span className="text-gray-500">(24)</span>
+                                <span
+                                    className={`font-medium text-sm sm:inline-flex hidden sm:text-base ${
+                                        userReaction === 'upvote' ? 'text-green-700' : 'text-gray-700'
+                                    }`}
+                                >
+                                    Upvote
+                                </span>
+                                <span
+                                    className={`${
+                                        userReaction === 'upvote' ? 'text-green-600' : 'text-gray-500'
+                                    }`}
+                                >
+                                    ({upvoteCount})
+                                </span>
                             </button>
 
+
                             <button
-                                className="flex items-center space-x-2 rounded-lg p-2 hover:shadow-lg hover:bg-red-100 transition duration-200">
+                                className={`flex items-center space-x-2 rounded-lg p-2 transition duration-200 ${
+                                    userReaction === 'downvote'
+                                        ? 'bg-red-100 shadow-lg'
+                                        : 'hover:shadow-lg hover:bg-red-100'
+                                }`}
+                                onClick={downvote}
+                            >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    className="h-6 w-6 text-red-500"
-                                    fill="none"
+                                    className={`h-6 w-6 ${
+                                        userReaction === 'downvote' ? 'text-red-700' : 'text-red-500'
+                                    }`}
+                                    fill={userReaction === 'downvote' ? 'currentColor' : 'none'}
                                     viewBox="0 0 24 24"
-                                    stroke="currentColor"
+                                    stroke={userReaction === 'downvote' ? 'none' : 'currentColor'}
                                 >
                                     <path
                                         strokeLinecap="round"
@@ -91,11 +152,22 @@ export default function Poll_forNewsFeed({ poll }) {
                                         d="M19 9l-7 7-7-7"
                                     ></path>
                                 </svg>
-                                <span className="font-medium text-gray-700 text-sm sm:inline-flex hidden sm:text-base">
-                            Downvote
-                        </span>
-                                <span className="text-gray-500">(3)</span>
+                                <span
+                                    className={`font-medium text-sm sm:inline-flex hidden sm:text-base ${
+                                        userReaction === 'downvote' ? 'text-red-700' : 'text-gray-700'
+                                    }`}
+                                >
+                                    Downvote
+                                </span>
+                                <span
+                                    className={`${
+                                        userReaction === 'downvote' ? 'text-red-600' : 'text-gray-500'
+                                    }`}
+                                >
+                                    ({downvoteCount})
+                                </span>
                             </button>
+
                         </div>
 
                         <div className="flex items-center space-x-2">
@@ -118,7 +190,7 @@ export default function Poll_forNewsFeed({ poll }) {
                             Comments
                         </span>
                             </button>
-                            <span className="text-gray-500">8</span>
+                            <span className="text-gray-500">0</span>
                         </div>
                     </div>
                 </div>

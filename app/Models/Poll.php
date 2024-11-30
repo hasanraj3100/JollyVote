@@ -30,6 +30,10 @@ class Poll extends Model
         return $this->hasMany(Vote::class);
     }
 
+    public function reactions(): HasMany {
+        return $this->hasMany(Reaction::class);
+    }
+
     public static function generateSlug($title) {
         $slug = Str::slug($title);
         $originalSlug = $slug;

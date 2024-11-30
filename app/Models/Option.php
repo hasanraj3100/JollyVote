@@ -13,7 +13,7 @@ class Option extends Model
     use HasFactory;
 
 
-    protected $fillable = ['title', 'vote_count'];
+    protected $fillable = ['title', 'poll_id'];
 
     public function poll(): BelongsTo
     {
