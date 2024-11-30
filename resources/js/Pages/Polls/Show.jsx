@@ -1,9 +1,11 @@
 import {Head} from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 import OptionElement from "@/Pages/Polls/Partials/OptionElement.jsx";
+import {useState} from "react";
+import {Chart as ChartJS, CategoryScale, LinearScale, BarElement,Title, Tooltip, Legend} from "chart.js";
+import {Bar} from "react-chartjs-2";
 
-
-
+ChartJS.register(CategoryScale, LinearScale,BarElement, Title, Tooltip, Legend);
 export default function Show({ poll }) {
     const {title, options} = poll;
 
@@ -16,6 +18,20 @@ export default function Show({ poll }) {
 
     const totalVotes = poll.votes.length;
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    }
+
+    const handleOpenModal = ()=> {
+        setIsModalOpen(true);
+    }
+
+    const chartLabels = options.map(option => option.title);
+    const chartData = options.map(option => {
+        return poll.votes.filter(vote => vote.option_id === option.id).length;
+    });
 
     return (
         <AuthenticatedLayout
@@ -35,8 +51,102 @@ export default function Show({ poll }) {
                     <OptionElement key={option.id} option={option} totalVotes={totalVotes} pollId={poll.id} votes={poll.votes}/>
                 ))}
 
+                {/* Show on Chart Button */}
+
+                <div className="flex justify-center mt-6">
+                    <button
+                        className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-full hover:bg-blue-600 transition duration-300"
+                        onClick={handleOpenModal}
+                    >
+                        Show on Chart
+                    </button>
+                </div>
 
             </div>
+
+            {isModalOpen && (
+                <div className="fixed inset-0 bg-white bg-opacity-90 z-50 flex items-center justify-center">
+                    <div className="relative w-full h-full p-4">
+                        {/* Close Button */}
+                        <button
+                            onClick={handleCloseModal}
+                            className="px-8 py-3 bg-red-500 text-white font-semibold rounded-full hover:bg-red-600 transition duration-300 mt-auto"
+                        >
+                            Close
+                        </button>
+                        {/* Modal Content */}
+                        <div className="l bg-white flex justify-center items-center">
+                            {/* Add chart content here */}
+
+                            <Bar
+                                data={ {
+                                    labels: chartLabels,
+                                    datasets: [
+                                        {
+                                            label: "Votes",
+                                            data: chartData,
+                                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                            borderColor: 'rgba(75, 192, 192, 1)',
+                                            borderWidth: 1,
+                                        }
+                                    ]
+                                }}
+
+                                options={{
+                                    responsive: true,
+                                    plugins: {
+                                        title: {
+                                            display: true,
+                                            text: poll.title,
+                                            font: {
+                                                size: 32, // Increase the title font size
+                                                weight: 'bold',
+                                            },
+                                            padding: {
+                                                top: 20,
+                                                bottom: 20,
+                                            },
+                                        },
+                                        tooltip: {
+                                            enabled: true,
+                                            bodyFont: {
+                                                size: 18, // Increase tooltip font size
+                                            },
+                                            titleFont: {
+                                                size: 18, // Increase tooltip title font size
+                                            },
+                                        },
+                                    },
+                                    scales: {
+                                        x: {
+                                            ticks: {
+                                                font: {
+                                                    size: 24, // Increase the font size of the x-axis labels (A, B, C)
+                                                },
+                                            },
+                                        },
+                                        y: {
+                                            scaleLabel: {
+                                                display: true,
+                                                labelString: 'Votes',
+                                                font: {
+                                                    size: 18, // Increase y-axis label font size
+                                                },
+                                            },
+                                            ticks: {
+                                                font: {
+                                                    size: 18, // Increase y-axis tick font size
+                                                },
+                                            },
+                                        },
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
 
 
         </AuthenticatedLayout>
