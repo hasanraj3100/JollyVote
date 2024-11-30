@@ -16,6 +16,7 @@ export default function OptionElement({option , totalVotes, pollId, votes}) {
     const {auth} = usePage().props;
     const currentUserID = auth?.user?.id;
     const userVote = (votes.find(vote=> vote.user_id === currentUserID))?.option_id;
+    
     return (
         <div
             key={option.id}
@@ -63,7 +64,7 @@ export default function OptionElement({option , totalVotes, pollId, votes}) {
                                 : 'bg-blue-500'
                         }`}
                         style={{
-                            width: `${(option.vote_count / totalVotes) * 100}%`,
+                            width: option.vote_count > 0 ? `${(option.vote_count / totalVotes) * 100}%` : 0,
                         }}
                     ></div>
                 </div>
