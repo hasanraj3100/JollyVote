@@ -1,4 +1,4 @@
-import {Head} from "@inertiajs/react";
+import {Head, router, usePage} from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 import OptionElement from "@/Pages/Polls/Partials/OptionElement.jsx";
 import {useState} from "react";
@@ -8,6 +8,7 @@ import {Bar} from "react-chartjs-2";
 ChartJS.register(CategoryScale, LinearScale,BarElement, Title, Tooltip, Legend);
 export default function Show({ poll }) {
     const {title, options} = poll;
+
 
     const voteCounts = options.map(option => {
         const count = poll.votes.filter(vote => vote.option_id === option.id).length;
@@ -28,10 +29,17 @@ export default function Show({ poll }) {
         setIsModalOpen(true);
     }
 
+    const handleEdit = () => {
+        router.visit(`edit/${poll.id}`);
+    }
+
     const chartLabels = options.map(option => option.title);
     const chartData = options.map(option => {
         return poll.votes.filter(vote => vote.option_id === option.id).length;
     });
+
+    const {auth} = usePage().props;
+    const currentUserID = auth?.user?.id;
 
     return (
         <AuthenticatedLayout
@@ -39,16 +47,32 @@ export default function Show({ poll }) {
         >
             <Head title={poll.title}/>
 
+
             <div className="max-w-lg mx-auto bg-white border rounded-lg shadow-md p-4">
+
+                {/* Edit Button */}
+                {poll.user.id === currentUserID &&
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-lg font-bold flex-grow">{title}</h2>
+                        <button
+                            className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition duration-300"
+                            onClick={handleEdit}
+                        >
+                            Edit
+                        </button>
+                    </div>
+                }
+
                 {/* Poll Title */}
                 <h2 className="text-lg font-bold">{title}</h2>
-                <p className="text-sm text-gray-500 hover:text-blue-400 mb-4" >
+                <p className="text-sm text-gray-500 hover:text-blue-400 mb-4">
                     by {poll.user.name} · Posted on {new Date(poll.updated_at).toLocaleTimeString()}
                 </p>
 
                 {/* Poll Options */}
                 {voteCounts.map((option, index) => (
-                    <OptionElement key={option.id} option={option} totalVotes={totalVotes} pollId={poll.id} votes={poll.votes}/>
+                    <OptionElement key={option.id} option={option} totalVotes={totalVotes} pollId={poll.id}
+                                   votes={poll.votes}/>
                 ))}
 
                 {/* Show on Chart Button */}
