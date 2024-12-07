@@ -116,12 +116,12 @@ export default function AuthenticatedLayout({ header, children }) {
                                     <span className="text-2xl text-indigo-500">
                                         <ion-icon name="flame"></ion-icon>
                                     </span>
-                                        <div>
+                                        <Link href={route('polls.show', poll.slug)}>
                                             <h3 className="text-md font-semibold text-gray-900">
                                                 {poll.title}
                                             </h3>
                                             <p className="text-sm text-gray-500"><NiceDateTime dateString={poll.created_at}/> - {poll.recent_votes_count} Upvotes</p>
-                                        </div>
+                                        </Link>
                                     </li>
                                 ))}
 
