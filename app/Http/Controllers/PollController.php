@@ -6,6 +6,7 @@ use App\Http\Requests\StorePollRequest;
 use App\Http\Requests\UpdatePollRequest;
 use App\Models\Option;
 use App\Models\Poll;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -147,6 +148,18 @@ class PollController extends Controller
             get();
 
         return Inertia::render('Polls/SearchResult', ['polls' => $polls ? $polls : [], 'query'=> $query]);
+    }
+
+
+    public function topPollsLastWeek()
+    {
+        $topPolls = Poll::withCount(['votes as recent_votes_count' => function ($query) {
+            $query->where('created_at', '>=', Carbon::now()->subWeek());
+        }])->orderBy('recent_votes_count', 'desc')
+            ->take(5)
+            ->get();
+
+        return response()->json($topPolls);
     }
 
 

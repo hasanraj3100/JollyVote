@@ -6,9 +6,12 @@ import {Link, router, useForm, usePage} from '@inertiajs/react';
 import { useState } from 'react';
 import NavButtonSm from "@/Components/NavButtonSm.jsx";
 import {Button} from "@headlessui/react";
+import NiceDateTime from "@/Components/NiceDateTime.jsx";
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
+    const trendingPolls = usePage().props.auth.trendingPolls;
+
 
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
@@ -105,32 +108,23 @@ export default function AuthenticatedLayout({ header, children }) {
                             </h2>
 
                             <ul className="space-y-4">
-                                <li
-                                    className="flex items-center space-x-3 hover:bg-gray-100 p-4 rounded-lg transition ease-in-out duration-200"
-                                >
-                <span className="text-2xl text-indigo-500">
-                  <ion-icon name="flame"></ion-icon>
-                </span>
-                                    <div>
-                                        <h3 className="text-md font-semibold text-gray-900">
-                                            Which is better?
-                                        </h3>
-                                        <p className="text-sm text-gray-500">2 Hours Ago - 125 Upvotes</p>
-                                    </div>
-                                </li>
-                                <li
-                                    className="flex items-center space-x-3 hover:bg-gray-100 p-4 rounded-lg transition ease-in-out duration-200"
-                                >
-                <span className="text-2xl text-indigo-500">
-                  <ion-icon name="flame"></ion-icon>
-                </span>
-                                    <div>
-                                        <h3 className="text-md font-semibold text-gray-900">
-                                            How to react in accidents?
-                                        </h3>
-                                        <p className="text-sm text-gray-500">4 Hours Ago - 98 Upvotes</p>
-                                    </div>
-                                </li>
+                                {trendingPolls.map(poll => (
+                                    <li
+                                        className="flex items-center space-x-3 hover:bg-gray-100 p-4 rounded-lg transition ease-in-out duration-200"
+                                        key={poll.id}
+                                    >
+                                    <span className="text-2xl text-indigo-500">
+                                        <ion-icon name="flame"></ion-icon>
+                                    </span>
+                                        <div>
+                                            <h3 className="text-md font-semibold text-gray-900">
+                                                {poll.title}
+                                            </h3>
+                                            <p className="text-sm text-gray-500"><NiceDateTime dateString={poll.created_at}/> - {poll.recent_votes_count} Upvotes</p>
+                                        </div>
+                                    </li>
+                                ))}
+
                             </ul>
                         </div>
                     </div>

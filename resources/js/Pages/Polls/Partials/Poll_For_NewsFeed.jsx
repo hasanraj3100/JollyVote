@@ -1,6 +1,7 @@
 import {Link, router, usePage} from "@inertiajs/react";
 import OptionElement from "@/Pages/Polls/Partials/OptionElement.jsx";
 import {Button} from "@headlessui/react";
+import NiceDateTime from "@/Components/NiceDateTime.jsx";
 
 
 export default function Poll_forNewsFeed({poll, singleView=false, setModalOpen=null}) {
@@ -49,35 +50,6 @@ export default function Poll_forNewsFeed({poll, singleView=false, setModalOpen=n
     }
 
 
-    const formatPostDate = (dateString) => {
-        const postDate = new Date(dateString);
-        const now = new Date();
-        const diffInSeconds = Math.floor((now - postDate) / 1000);
-
-        if (diffInSeconds < 60) {
-            return 'Just now';
-        } else if (diffInSeconds < 3600) {
-            const minutes = Math.floor(diffInSeconds / 60);
-            return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-        } else if (diffInSeconds < 86400) {
-            const hours = Math.floor(diffInSeconds / 3600);
-            return `${hours} hour${hours > 1 ? 's' : ''} ago`;
-        } else if (diffInSeconds < 172800) {
-            return 'Yesterday';
-        } else if (diffInSeconds < 604800) {
-            const days = Math.floor(diffInSeconds / 86400);
-            return `${days} day${days > 1 ? 's' : ''} ago`;
-        } else {
-            return postDate.toLocaleString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: now.getFullYear() === postDate.getFullYear() ? undefined : 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-            });
-        }
-    }
-
 
     const {auth} = usePage().props;
     const currentUserID = auth?.user?.id;
@@ -98,7 +70,7 @@ export default function Poll_forNewsFeed({poll, singleView=false, setModalOpen=n
                     <span className={'text-sm text-gray-500 hover:text-blue-500'}>@{poll.user.name}</span>
                 </div>
                 <div className={'flex space-x-4 items-center ml-auto'}>
-                    <span className={'text-sm text-gray-500 ml-auto'}>{formatPostDate(poll.updated_at)}</span>
+                    <span className={'text-sm text-gray-500 ml-auto'}><NiceDateTime dateString={poll.updated_at}/></span>
                     <Button className={'flex items-center text-gray-500 text-lg'}>
                         <ion-icon name={'bookmark-outline'}></ion-icon>
                     </Button>
