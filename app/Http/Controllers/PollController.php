@@ -68,7 +68,7 @@ class PollController extends Controller
     public function show($slug): Response
     {
 
-        $poll = Poll::with(['options', 'votes', 'user'])->where('slug', $slug)->firstOrFail();
+        $poll = Poll::with(['options', 'votes', 'user', 'reactions'])->where('slug', $slug)->firstOrFail();
 
         return Inertia::render('Polls/Show', ['poll' => $poll]);
     }

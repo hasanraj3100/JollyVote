@@ -1,5 +1,6 @@
 import {Head, router, useForm} from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
+import {Button} from "@headlessui/react";
 
 export default function Edit({ poll }) {
 
@@ -47,11 +48,17 @@ export default function Edit({ poll }) {
     return (
 
         <AuthenticatedLayout>
-            <Head title="Create New Poll"/>
+            <Head title="Update Poll"/>
 
-            <div className="bg-gray-50 min-h-screen flex items-center justify-center">
+            <div className="bg-gray-50 lg:py-20 py-10 flex items-center justify-center">
                 <div className="w-full max-w-2xl bg-white shadow-lg rounded-lg p-6">
-                    <h1 className="text-2xl font-bold text-gray-800 mb-4">Create a Poll</h1>
+                    <div className={'flex justify-between items-center'}>
+                        <h1 className="text-2xl font-bold text-gray-800 mb-4">Edit Poll</h1>
+                        <Button className={'text-red-500 font-bold hover:bg-red-200 text-2xl  px-4 py-1'}>
+                            <ion-icon name={'trash-outline'}></ion-icon>
+                        </Button>
+                    </div>
+
                     <form onSubmit={handleSubmit}>
                         {/* Poll Title */}
                         <div className="mb-4">
@@ -94,16 +101,16 @@ export default function Edit({ poll }) {
                                             <button
                                                 type="button"
                                                 onClick={() => removeOption(option.id)}
-                                                className="ml-2 text-red-500 hover:text-red-700"
+                                                className="ml-2 font-bold text-red-500 hover:text-red-700"
                                             >
                                                 Remove
                                             </button>
                                         )}
 
 
-
                                     </div>
-                                    {errors[`options.${index}.title`] &&  <div className="block">{errors[`options.${index}.title`]}</div>}
+                                    {errors[`options.${index}.title`] &&
+                                        <div className="block">{errors[`options.${index}.title`]}</div>}
 
                                 </div>
 
@@ -158,7 +165,8 @@ export default function Edit({ poll }) {
                                     </div>
                                 </div>
                                 <p className="mt-1 text-xs text-gray-500">
-                                    Private polls are accessible only via direct link, while public polls appear in users' feeds.                            </p>
+                                    Private polls are accessible only via direct link, while public polls appear in
+                                    users' feeds. </p>
                             </fieldset>
                             {errors.privacy && <div className="text-red-500">{errors.privacy}</div>}
                         </div>
@@ -168,8 +176,9 @@ export default function Edit({ poll }) {
                             type="submit"
                             className="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         >
-                            Create Poll
+                            Update
                         </button>
+
 
                     </form>
                 </div>

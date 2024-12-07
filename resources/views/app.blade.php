@@ -10,6 +10,20 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
+        <style>
+            ::-webkit-scrollbar {
+                width: 5px;
+            }
+            ::-webkit-scrollbar-track {
+                background: #d2edf8;
+            }
+            ::-webkit-scrollbar-thumb {
+                background: #38c1f7;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: #0699d3;
+            }
+        </style>
         <!-- Scripts -->
         @routes
         @viteReactRefresh
@@ -18,5 +32,14 @@
     </head>
     <body class="font-sans antialiased">
         @inertia
+
+        <script
+            type="module"
+            src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+        ></script>
+        <script
+            nomodule
+            src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+        ></script>
     </body>
 </html>

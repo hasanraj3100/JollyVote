@@ -1,5 +1,6 @@
 import {Link, router, usePage} from "@inertiajs/react";
 import OptionElement from "@/Pages/Polls/Partials/OptionElement.jsx";
+import {Button} from "@headlessui/react";
 
 
 export default function Poll_forNewsFeed({poll}) {
@@ -38,16 +39,8 @@ export default function Poll_forNewsFeed({poll}) {
         });
     }
 
-    const downvote = (e) => {
-        router.post("/downvote", {'poll_id': poll.id}, {
-            onSuccess: (page) => {
-                console.log("Downvote Casted");
-            },
-            onError: (errors) => {
-                console.error('Error occured while downvoting: ', errors);
-            },
-            preserveScroll: true
-        });
+    const handleEdit = (e) => {
+        router.visit(route('polls.edit', poll.id));
     }
 
 
@@ -88,141 +81,71 @@ export default function Poll_forNewsFeed({poll}) {
     const downvoteCount = poll.reactions.filter(reaction => reaction.type === 'downvote').length;
 
     return (
-        <div className="flex justify-center bg-gray-100">
-            <div className="w-full max-w-2xl">
-                <div
-                    className="bg-white shadow-md rounded-lg p-6 mb-6 border-2 border-transparent hover:bg-gray-100 hover:border-gray-600 transition duration-100">
-                    <div className="flex items-center mb-4" onClick={viewThePost}>
-                        <div className="ml-3">
-                            <h2 className="text-xl font-semibold hover:text-blue-400">{poll.title}</h2>
-                            <p
-                                className="text-sm text-gray-500 hover:text-blue-400"
-                                onClick={viewTheAuthor}
-                            >
-                                by {poll.user.name} · Posted on{' '}
-                                {formatPostDate(poll.updated_at)}
-                            </p>
-                        </div>
-                    </div>
+        <div className={'bg-white shadow-md rounded px-8'}>
+            <div className={'flex itemss-center mb-4 py-6'}>
+                <img
+                    src={'https://via.placeholder.com/40'}
+                    alt={`${poll.user.name} avatar`}
+                    className={'w-12 h-12 rounded-full mr-4'}
+                />
+                <div>
+                    <h3 className={'text-lg font-bold'}>{poll.user.name}</h3>
+                    <span className={'text-sm text-gray-500 hover:text-blue-500'}>@{poll.user.name}</span>
+                </div>
+                <div className={'flex space-x-4 items-center ml-auto'}>
+                    <span className={'text-sm text-gray-500 ml-auto'}>{formatPostDate(poll.updated_at)}</span>
+                    <Button className={'flex items-center text-gray-500 text-lg'}>
+                        <ion-icon name={'bookmark-outline'}></ion-icon>
+                    </Button>
 
-                    {voteCounts.map((option) => (
-                        <OptionElement key={option.id} option={option} totalVotes={totalVotes} pollId={poll.id}
-                                       votes={poll.votes}/>
-                    ))}
+                    {poll.user.id === currentUserID && (
+                        <Button className={'flex items-center text-gray-500 text-lg'}
+                        onClick={handleEdit}>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17.5 2.5l4.5 4.5-12 12H6v-5l12-12z"></path>
+                            </svg>
+                        </Button>
+                    )}
 
-                    <div
-                        className="flex items-center justify-between border-t pt-4"
-
-                    >
-                        <div className="flex items-center space-x-3 sm:space-x-6">
-                            <button
-                                className={`flex items-center space-x-2 rounded-lg p-2 transition duration-200 ${
-                                    userReaction === 'upvote'
-                                        ? 'bg-green-100 shadow-lg'
-                                        : 'hover:shadow-lg hover:bg-green-100'
-                                }`}
-                                onClick={upvote}
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className={`h-6 w-6 ${
-                                        userReaction === 'upvote' ? 'text-green-700' : 'text-green-500'
-                                    }`}
-                                    fill={userReaction === 'upvote' ? 'currentColor' : 'none'}
-                                    viewBox="0 0 24 24"
-                                    stroke={userReaction === 'upvote' ? 'none' : 'currentColor'}
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M5 15l7-7 7 7"
-                                    ></path>
-                                </svg>
-                                <span
-                                    className={`font-medium text-sm sm:inline-flex hidden sm:text-base ${
-                                        userReaction === 'upvote' ? 'text-green-700' : 'text-gray-700'
-                                    }`}
-                                >
-                                    Upvote
-                                </span>
-                                <span
-                                    className={`${
-                                        userReaction === 'upvote' ? 'text-green-600' : 'text-gray-500'
-                                    }`}
-                                >
-                                    ({upvoteCount})
-                                </span>
-                            </button>
-
-
-                            <button
-                                className={`flex items-center space-x-2 rounded-lg p-2 transition duration-200 ${
-                                    userReaction === 'downvote'
-                                        ? 'bg-red-100 shadow-lg'
-                                        : 'hover:shadow-lg hover:bg-red-100'
-                                }`}
-                                onClick={downvote}
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className={`h-6 w-6 ${
-                                        userReaction === 'downvote' ? 'text-red-700' : 'text-red-500'
-                                    }`}
-                                    fill={userReaction === 'downvote' ? 'currentColor' : 'none'}
-                                    viewBox="0 0 24 24"
-                                    stroke={userReaction === 'downvote' ? 'none' : 'currentColor'}
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M19 9l-7 7-7-7"
-                                    ></path>
-                                </svg>
-                                <span
-                                    className={`font-medium text-sm sm:inline-flex hidden sm:text-base ${
-                                        userReaction === 'downvote' ? 'text-red-700' : 'text-gray-700'
-                                    }`}
-                                >
-                                    Downvote
-                                </span>
-                                <span
-                                    className={`${
-                                        userReaction === 'downvote' ? 'text-red-600' : 'text-gray-500'
-                                    }`}
-                                >
-                                    ({downvoteCount})
-                                </span>
-                            </button>
-
-                        </div>
-
-                        <div className="flex items-center space-x-2">
-                            <button className="flex items-center text-gray-500 hover:text-blue-500">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-5 w-5 mr-1"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M17 8h2a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V10a2 2 0 012-2h2m2-2h6m-6 0a2 2 0 012-2h2a2 2 0 012 2m-4 14v-4m0 0H9m4 0h2"
-                                    ></path>
-                                </svg>
-                                <span className="font-medium text-sm sm:inline-flex hidden sm:text-base">
-                            Comments
-                        </span>
-                            </button>
-                            <span className="text-gray-500">0</span>
-                        </div>
-                    </div>
                 </div>
             </div>
+
+            <p className={'text-lg mb-4'}>
+                {poll.title}
+            </p>
+
+            <div className="poll-container">
+
+                {voteCounts.map(option => (
+                    <OptionElement option={option} pollId={poll.id} totalVotes={totalVotes} votes={poll.votes}/>
+                ))}
+
+            </div>
+
+            <div className="text-sm text-gray-500 mb-4">{totalVotes} votes • 7 Days Left</div>
+
+            <div className="flex text-2xl items-center border-t">
+                <button
+                    className={`text-gray-700 w-full h-12 hover:bg-sky-100 flex justify-center items-center space-x-2
+                    ${userReaction === 'upvote' ? 'text-red-600' : ''}`}
+                    onClick={upvote}
+                >
+                    <ion-icon name={`${userReaction === 'upvote' ? 'heart' : 'heart-outline'}`}></ion-icon>
+                    <span className="text-sm">{upvoteCount}</span>
+                </button>
+                <button
+                    className="text-gray-700 mr-4 h-12 w-full hover:bg-sky-100 flex justify-center items-center space-x-2"
+                    onClick={viewThePost}
+                >
+                    <ion-icon name="chatbox-ellipses-outline"></ion-icon>
+                    <span className="text-sm">0</span>
+                </button>
+                <button className="text-gray-700 mr-4 h-12 w-full hover:bg-sky-100">
+                    <ion-icon name="stats-chart-outline"></ion-icon>
+                </button>
+            </div>
+
         </div>
 
     );
