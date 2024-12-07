@@ -2,7 +2,7 @@ import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
-import {Link, router, usePage} from '@inertiajs/react';
+import {Link, router, useForm, usePage} from '@inertiajs/react';
 import { useState } from 'react';
 import NavButtonSm from "@/Components/NavButtonSm.jsx";
 import {Button} from "@headlessui/react";
@@ -10,12 +10,17 @@ import {Button} from "@headlessui/react";
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
 
+
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
-        useState(false)
+        useState(false);
+
+    const [query, setQuery] = useState('');
 
     const logout = (e) => {
         router.post(route('logout'));
     }
+
+
 
     return (
         <>
@@ -81,11 +86,14 @@ export default function AuthenticatedLayout({ header, children }) {
                 <aside className={'hidden bg-white lg:block lg:w-1/4'}>
                     <div className="flex flex-col items-start p-4">
                         <div className="relative w-full mb-4">
-                            <input
-                                type="text"
-                                placeholder="Search Polls"
-                                className="w-full pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            />
+                            <form method={"GET"} action={route('polls.search')}>
+                                <input
+                                    type="text"
+                                    name={'query'}
+                                    placeholder="Search Polls"
+                                    className="w-full pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                />
+                            </form>
                             <div className="absolute left-0 top-0 h-full flex items-center px-2">
                                 <ion-icon name="search-outline" className="text-gray-500"></ion-icon>
                             </div>

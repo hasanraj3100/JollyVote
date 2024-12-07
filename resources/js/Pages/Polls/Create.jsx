@@ -32,9 +32,6 @@ function CreatePoll() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("Poll Title:", data.pollTitle);
-        console.log("Options:", data.options.filter((option) => option.title.trim() !== ""));
-        // Add your submit logic here
         post("/polls");
     };
 

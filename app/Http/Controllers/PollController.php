@@ -90,7 +90,7 @@ class PollController extends Controller
                 'title' => $request->pollTitle,
                 'public' => $request->privacy === "public",
             ]);
-            
+
             $updatedOptions = collect($request->options);
 
 
@@ -136,6 +136,18 @@ class PollController extends Controller
         //
     }
 
+
+    public function search(Request $request)
+    {
+        $query = $request->query('query', '');
+
+        $polls = Poll::with(['options', 'votes', 'user', 'reactions'])->
+            where('public', true)->
+            where('title', 'like', '%'.$query.'%')->
+            get();
+
+        return Inertia::render('Polls/SearchResult', ['polls' => $polls ? $polls : [], 'query'=> $query]);
+    }
 
 
 }

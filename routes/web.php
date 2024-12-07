@@ -33,6 +33,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/vote', [\App\Http\Controllers\VoteController::class, 'castVote']);
 
+    Route::get('/search', [PollController::class, 'search'])->name('polls.search');
+
     Route::post('/upvote', [\App\Http\Controllers\ReactionController::class, 'upvote']);
     Route::post('/downvote', [\App\Http\Controllers\ReactionController::class, 'downvote']);
 
