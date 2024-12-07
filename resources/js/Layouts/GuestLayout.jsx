@@ -12,11 +12,7 @@ export default function GuestLayout({ children }) {
                 <aside className="bg-white lg:w-1/4 border-r-2 shadow-sm">
                     { /* Sidebar Desktop */}
                     <div className="hidden lg:flex flex-col items-start p-8 md:px-20">
-                        <div className={"flex items-center space-x-4 mb-8"}>
-                            <img className={"h-12 w-12 rounded-full"} src={"https://via.placeholder.com/40"}
-                                 alt={"user avatar"}/>
-                            <span className={"font-bold text-lg text-gray-500"}>Unregistered User</span>
-                        </div>
+
                         {/* Menu Items */}
                         <div className="flex flex-col space-y-8 text-gray-500">
                             <NavLink name={'home'} active={route().current('guest.home')} href={route('guest.home')}>Home</NavLink>
@@ -40,16 +36,7 @@ export default function GuestLayout({ children }) {
 
                 <aside className={'hidden bg-white lg:block lg:w-1/4'}>
                     <div className="flex flex-col items-start p-4">
-                        <div className="relative w-full mb-4">
-                            <input
-                                type="text"
-                                placeholder="Search Polls"
-                                className="w-full pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            />
-                            <div className="absolute left-0 top-0 h-full flex items-center px-2">
-                                <ion-icon name="search-outline" className="text-gray-500"></ion-icon>
-                            </div>
-                        </div>
+
 
                         <div className="w-lg py-6 px-4 rounded-lg">
                             <h2 className="text-xl font-semibold text-gray-800 mb-4">

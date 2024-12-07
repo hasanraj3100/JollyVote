@@ -20,19 +20,17 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
             <Head title="Welcome" />
             <GuestLayout>
 
-                    <div className={'bg-gray-300 mb-2'}>
-                        <div className={'flex bg-white shadow-md rounded px-8 py-6 space-x-2'}>
-                            <CategoryButton name='Funny'/>
-                            <CategoryButton name='Health'/>
-                            <CategoryButton name='Food'/>
-                            <CategoryButton name='Travel'/>
-                            <CategoryButton name='Politics'/>
-                            <CategoryButton name='Relationship'/>
+                <div className={'p-10'}>
+                    <h1 className={'text-2xl font-bold p-5 text-center'}>Welcome to Jolly Vote!</h1>
+                    <p className={'mt-5'}>Join a community of thoughtful individuals where you can create engaging polls, vote on others' opinions, and share your thoughts in the comments. Dive deeper into poll results with visually interactive statistics and graphs!
+                        </p>
+                    <p className={'mt-5'}>To get started, simply
+                        <Link href={route('login')} className={'px-1 text-blue-700 font-bold hover:bg-blue-400'}>Login</Link>
+                        or
+                        <Link href={route('register')} className={'px-1 text-blue-700 font-bold hover:bg-blue-400'}>Register</Link>
+                        to share your voice and see what others have to say.</p>
 
-                        </div>
-                    </div>
-
-                    <ShowAll/>
+                </div>
 
             </GuestLayout>
         </>

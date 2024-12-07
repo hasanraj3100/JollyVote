@@ -81,7 +81,7 @@ export default function Poll_forNewsFeed({poll}) {
     const downvoteCount = poll.reactions.filter(reaction => reaction.type === 'downvote').length;
 
     return (
-        <div className={'bg-white shadow-md rounded px-8'}>
+        <div className={'bg-white shadow-lg rounded px-8 m-1'}>
             <div className={'flex itemss-center mb-4 py-6'}>
                 <img
                     src={'https://via.placeholder.com/40'}

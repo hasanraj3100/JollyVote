@@ -11,7 +11,11 @@ export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
-        useState(false);
+        useState(false)
+
+    const logout = (e) => {
+        router.post(route('logout'));
+    }
 
     return (
         <>
@@ -34,7 +38,7 @@ export default function AuthenticatedLayout({ header, children }) {
                             <NavLink name={'notifications'} >Notifications</NavLink>
                             <NavLink name={'bookmarks'}> Bookmarks </NavLink>
                             <NavLink name={'person'} active={route().current('profile.edit')} href={route('profile.edit')}> My Profile </NavLink>
-                            <NavLink name={'log-out'} href={route('logout')}> Logout </NavLink>
+                            <NavLink name={'log-out'} onClick={logout}> Logout </NavLink>
 
                             <Button
                                 className={"bg-emerald-500 p-4 rounded-md text-white font-bold"}

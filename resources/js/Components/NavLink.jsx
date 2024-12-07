@@ -11,7 +11,7 @@ export default function NavLink({
         <Link
             {...props}
             className={
-                'flex items-center space-x-3 hover:text-black'
+                `flex items-center space-x-3 hover:text-gray-900  ${active && 'text-black'}`
             }
         >
             <div className={'text-2xl'}> <ion-icon name={`${name}${active ? '': '-outline'}`}></ion-icon>
