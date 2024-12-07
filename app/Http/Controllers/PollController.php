@@ -90,19 +90,15 @@ class PollController extends Controller
                 'title' => $request->pollTitle,
                 'public' => $request->privacy === "public",
             ]);
-
-            // Synchronize the poll options
+            
             $updatedOptions = collect($request->options);
 
 
 
 
-            // Get current options and their IDs
+
             $existingOptions = $poll->options()->get()->keyBy('id');
 
-
-
-            // Update existing options and track which IDs to retain
             $retainOptionIds = [];
             foreach ($updatedOptions as $option) {
                 if (isset($option['id']) && $existingOptions->has($option['id'])) {

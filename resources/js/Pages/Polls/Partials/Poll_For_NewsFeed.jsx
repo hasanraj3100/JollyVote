@@ -3,7 +3,7 @@ import OptionElement from "@/Pages/Polls/Partials/OptionElement.jsx";
 import {Button} from "@headlessui/react";
 
 
-export default function Poll_forNewsFeed({poll}) {
+export default function Poll_forNewsFeed({poll, singleView=false, setModalOpen=null}) {
 
     const {options} = poll;
 
@@ -16,7 +16,7 @@ export default function Poll_forNewsFeed({poll}) {
 
     const totalVotes = poll.votes.length;
     const viewThePost = () => {
-        router.visit(`polls/${poll.slug}`, {
+        router.visit(route('polls.show', poll.slug), {
             preserveScroll: true
         });
     }
@@ -41,6 +41,11 @@ export default function Poll_forNewsFeed({poll}) {
 
     const handleEdit = (e) => {
         router.visit(route('polls.edit', poll.id));
+    }
+
+    const handleModal = () => {
+        if(setModalOpen)
+        setModalOpen(o => !o);
     }
 
 
@@ -141,7 +146,9 @@ export default function Poll_forNewsFeed({poll}) {
                     <ion-icon name="chatbox-ellipses-outline"></ion-icon>
                     <span className="text-sm">0</span>
                 </button>
-                <button className="text-gray-700 mr-4 h-12 w-full hover:bg-sky-100">
+                <button className="text-gray-700 mr-4 h-12 w-full hover:bg-sky-100"
+                        onClick={singleView ? handleModal : viewThePost}
+                >
                     <ion-icon name="stats-chart-outline"></ion-icon>
                 </button>
             </div>
