@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(\App\Models\User::class);
             $table->foreignIdFor(\App\Models\Poll::class);
-            $table->enum("type", ['upvote', 'downvote']);
             $table->timestamps();
         });
     }

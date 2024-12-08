@@ -6,6 +6,8 @@ import NiceDateTime from "@/Components/NiceDateTime.jsx";
 
 export default function Poll_forNewsFeed({poll, singleView=false, setModalOpen=null}) {
 
+    const currentUserID = usePage().props.auth.user.id;
+
     const {options} = poll;
 
     const voteCounts = options.map(option => {
@@ -27,18 +29,13 @@ export default function Poll_forNewsFeed({poll, singleView=false, setModalOpen=n
         router.visit(`users/2`);
     }
 
-    const upvote = (e) => {
-        console.log("clicked");
-        router.post('/upvote', {'poll_id': poll.id}, {
-            onSuccess: (page) => {
-                console.log("Upvoted casted");
-            },
-            onError: (errors) => {
-                console.error('Error occured while upvoting: ', errors);
-            },
+
+    const handleReact = (e) => {
+        router.post(route('polls.react'), {'poll_id': poll.id}, {
             preserveScroll: true,
-        });
-    }
+
+        })
+    };
 
     const handleEdit = (e) => {
         router.visit(route('polls.edit', poll.id));
@@ -49,13 +46,8 @@ export default function Poll_forNewsFeed({poll, singleView=false, setModalOpen=n
         setModalOpen(o => !o);
     }
 
-
-
-    const {auth} = usePage().props;
-    const currentUserID = auth?.user?.id;
-    const userReaction = poll.reactions.find(reaction => reaction.user_id === currentUserID)?.type;
-    const upvoteCount = poll.reactions.filter(reaction => reaction.type === 'upvote').length;
-    const downvoteCount = poll.reactions.filter(reaction => reaction.type === 'downvote').length;
+    const userReaction = !!poll.reactions.find(reaction => reaction.user_id === currentUserID);
+    const reactionCount = poll.reactions.length;
 
     return (
         <div className={'bg-white shadow-lg rounded px-8 m-1'}>
@@ -105,11 +97,11 @@ export default function Poll_forNewsFeed({poll, singleView=false, setModalOpen=n
             <div className="flex text-2xl items-center border-t">
                 <button
                     className={`text-gray-700 w-full h-12 hover:bg-sky-100 flex justify-center items-center space-x-2
-                    ${userReaction === 'upvote' ? 'text-red-600' : ''}`}
-                    onClick={upvote}
+                    ${userReaction ? 'text-red-600' : ''}`}
+                    onClick={handleReact}
                 >
-                    <ion-icon name={`${userReaction === 'upvote' ? 'heart' : 'heart-outline'}`}></ion-icon>
-                    <span className="text-sm">{upvoteCount}</span>
+                    <ion-icon name={`${userReaction ? 'heart' : 'heart-outline'}`}></ion-icon>
+                    <span className="text-sm">{reactionCount}</span>
                 </button>
                 <button
                     className="text-gray-700 mr-4 h-12 w-full hover:bg-sky-100 flex justify-center items-center space-x-2"

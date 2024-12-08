@@ -1,17 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Http\Requests\StorePollRequest;
-use App\Http\Requests\UpdatePollRequest;
-use App\Models\Option;
 use App\Models\Poll;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -20,7 +15,12 @@ class PollController extends Controller
 
     public function index() : Response
     {
-        return Inertia::render('Polls/Index');
+
+        $polls = Poll::with(['options', 'votes', 'user', 'reactions'])
+            ->where('public', true)
+            ->orderBy('updated_at', 'desc')
+            ->get();
+        return Inertia::render('Polls/Index', ['polls' => $polls]);
     }
 
     public function fetchPosts(Request $request): JsonResponse
@@ -42,7 +42,7 @@ class PollController extends Controller
             ->take($limit)
             ->get();
 
-        return response()->json($polls);
+        return response()->json(['polls' => $polls]);
     }
 
     public function create() : Response

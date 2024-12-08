@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PollController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReactionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -37,8 +38,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/search', [PollController::class, 'search'])->name('polls.search');
 
-    Route::post('/upvote', [\App\Http\Controllers\ReactionController::class, 'upvote']);
-    Route::post('/downvote', [\App\Http\Controllers\ReactionController::class, 'downvote']);
+    Route::post('/react', [ReactionController::class, 'react'])->name('polls.react');
+
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -1,12 +1,13 @@
-import {Head} from "@inertiajs/react";
+import {Head, router} from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 import Poll_forNewsFeed from "@/Pages/Polls/Partials/Poll_For_NewsFeed.jsx";
 import CategoryButton from "@/Components/CategoryButton.jsx";
 import {useEffect, useState} from "react";
 import {useInView} from "react-intersection-observer";
 
-export default function Index() {
-    const [polls, setPolls] = useState([]);
+export default function Index({polls}) {
+
+    const [currentPolls, setCurrentPolls] = useState([]);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [offset, setOffset] = useState(0);
@@ -14,6 +15,12 @@ export default function Index() {
 
     const {ref, inView} = useInView({triggerOnce: false});
 
+
+    useEffect(() => {
+        setCurrentPolls((prevCurrentPolls) =>
+            polls.filter((poll) => prevCurrentPolls.some((current) => current.id === poll.id))
+        );
+    }, [polls]);
     const fetchPolls = async() => {
         if(loading && !hasMore) return;
         setLoading(true);
@@ -23,9 +30,10 @@ export default function Index() {
                 params: {offset, limit},
             });
 
-            const newPolls = response.data;
+            const newPolls = response.data.polls;
+            console.log(newPolls);
 
-            setPolls((prev) => [...prev, ...newPolls]);
+            setCurrentPolls((prev) => [...prev, ...newPolls]);
             setOffset(prev => prev+limit);
             if(newPolls.length < 5) setHasMore(false);
 
@@ -59,7 +67,7 @@ export default function Index() {
                 </div>
             </div>
             <div className="lg:pb-1 pb-10">
-                {polls.map(poll =>
+                {currentPolls.map(poll =>
                     <Poll_forNewsFeed key={poll.id} poll={poll}/>
                 )}
                 {loading &&
