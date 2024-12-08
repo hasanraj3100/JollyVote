@@ -1,7 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 import GuestLayout from "@/Layouts/GuestLayout.jsx";
-import CategoryButton from "@/Components/CategoryButton.jsx";
-import ShowAll from "@/Pages/Polls/ShowAll.jsx";
+
 
 export default function Welcome({ auth, laravelVersion, phpVersion }) {
     const handleImageError = () => {

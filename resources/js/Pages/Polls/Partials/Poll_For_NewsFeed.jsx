@@ -79,7 +79,7 @@ export default function Poll_forNewsFeed({poll, singleView=false, setModalOpen=n
                         <Button className={'flex items-center text-gray-500 text-lg'}
                         onClick={handleEdit}>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none"
-                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                 stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M17.5 2.5l4.5 4.5-12 12H6v-5l12-12z"></path>
                             </svg>
                         </Button>
@@ -95,7 +95,7 @@ export default function Poll_forNewsFeed({poll, singleView=false, setModalOpen=n
             <div className="poll-container">
 
                 {voteCounts.map(option => (
-                    <OptionElement option={option} pollId={poll.id} totalVotes={totalVotes} votes={poll.votes}/>
+                    <OptionElement key={option.id} option={option} pollId={poll.id} totalVotes={totalVotes} votes={poll.votes}/>
                 ))}
 
             </div>

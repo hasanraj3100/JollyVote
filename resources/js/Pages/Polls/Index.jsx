@@ -1,9 +1,46 @@
-import {Head, Link} from "@inertiajs/react";
+import {Head} from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 import Poll_forNewsFeed from "@/Pages/Polls/Partials/Poll_For_NewsFeed.jsx";
 import CategoryButton from "@/Components/CategoryButton.jsx";
+import {useEffect, useState} from "react";
+import {useInView} from "react-intersection-observer";
 
-export default function Index({ polls }) {
+export default function Index() {
+    const [polls, setPolls] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+    const [offset, setOffset] = useState(0);
+    const limit = 15;
+
+    const {ref, inView} = useInView({triggerOnce: false});
+
+    const fetchPolls = async() => {
+        if(loading && !hasMore) return;
+        setLoading(true);
+
+        try {
+            const response = await axios.get(route('polls.fetch'), {
+                params: {offset, limit},
+            });
+
+            const newPolls = response.data;
+
+            setPolls((prev) => [...prev, ...newPolls]);
+            setOffset(prev => prev+limit);
+            if(newPolls.length < 5) setHasMore(false);
+
+        } catch(error) {
+            console.error("Failed to fetch polls : ", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if(inView && hasMore) {
+            fetchPolls();
+        }
+    }, [inView]);
 
     return (
         <AuthenticatedLayout
@@ -25,7 +62,14 @@ export default function Index({ polls }) {
                 {polls.map(poll =>
                     <Poll_forNewsFeed key={poll.id} poll={poll}/>
                 )}
+                {loading &&
+                    <div className="loading-spinner flex justify-center items-center py-5">
+                        <div className="w-8 h-8 border-4 border-t-4 border-gray-200 border-t-gray-800 rounded-full animate-spin"></div>
+                    </div>
+                }
+                {!loading && hasMore && <div ref={ref}></div>}
             </div>
+
 
         </AuthenticatedLayout>
 

@@ -7,6 +7,7 @@ use App\Http\Requests\UpdatePollRequest;
 use App\Models\Option;
 use App\Models\Poll;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,14 +20,30 @@ class PollController extends Controller
 
     public function index() : Response
     {
-        $polls = Poll::with(['options', 'votes', 'user', 'reactions'])
-        ->where('public', true)
-        ->orderBy('created_at', 'desc')
-        ->get();
-
-        return Inertia::render('Polls/Index', ['polls' => $polls ? $polls : []]);
+        return Inertia::render('Polls/Index');
     }
 
+    public function fetchPosts(Request $request): JsonResponse
+    {
+
+        $request->validate([
+            'limit'=> 'numeric|min:1',
+            'offset'=> 'numeric|min:0'
+        ]);
+
+
+        $limit = $request->input('limit');
+        $offset = $request->input('offset');
+
+        $polls = Poll::with(['options', 'votes', 'user', 'reactions'])
+            ->where('public', true)
+            ->orderBy('created_at', 'desc')
+            ->skip($offset)
+            ->take($limit)
+            ->get();
+
+        return response()->json($polls);
+    }
 
     public function create() : Response
     {
@@ -36,7 +53,9 @@ class PollController extends Controller
 
     public function store(StorePollRequest $request): RedirectResponse
     {
+
         DB::beginTransaction();
+
         try {
 
             $is_public = $request->privacy === "public";
@@ -70,7 +89,6 @@ class PollController extends Controller
     {
 
         $poll = Poll::with(['options', 'votes', 'user', 'reactions'])->where('slug', $slug)->firstOrFail();
-
         return Inertia::render('Polls/Show', ['poll' => $poll]);
     }
 
@@ -83,9 +101,10 @@ class PollController extends Controller
 
     public function update(StorePollRequest $request, Poll $poll): RedirectResponse
     {
+
         DB::beginTransaction();
+
         try {
-            // Update the poll details
 
             $poll->update([
                 'title' => $request->pollTitle,
@@ -93,10 +112,6 @@ class PollController extends Controller
             ]);
 
             $updatedOptions = collect($request->options);
-
-
-
-
 
             $existingOptions = $poll->options()->get()->keyBy('id');
 
@@ -115,7 +130,6 @@ class PollController extends Controller
                 }
             }
 
-            // Delete options not included in the request
             $poll->options()
                 ->whereNotIn('id', $retainOptionIds)
                 ->delete();
@@ -149,18 +163,5 @@ class PollController extends Controller
 
         return Inertia::render('Polls/SearchResult', ['polls' => $polls ? $polls : [], 'query'=> $query]);
     }
-
-
-    public function topPollsLastWeek()
-    {
-        $topPolls = Poll::withCount(['votes as recent_votes_count' => function ($query) {
-            $query->where('created_at', '>=', Carbon::now()->subWeek());
-        }])->orderBy('recent_votes_count', 'desc')
-            ->take(5)
-            ->get();
-
-        return response()->json($topPolls);
-    }
-
 
 }
