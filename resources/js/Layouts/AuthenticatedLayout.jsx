@@ -120,7 +120,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                             <h3 className="text-md font-semibold text-gray-900">
                                                 {poll.title}
                                             </h3>
-                                            <p className="text-sm text-gray-500"><NiceDateTime dateString={poll.created_at}/> - {poll.recent_votes_count} Upvotes</p>
+                                            <p className="text-sm text-gray-500"><NiceDateTime dateString={poll.created_at}/> - {poll.reactions_count} Upvotes</p>
                                         </Link>
                                     </li>
                                 ))}

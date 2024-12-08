@@ -31,7 +31,7 @@ export default function Index({polls}) {
             });
 
             const newPolls = response.data.polls;
-            console.log(newPolls);
+
 
             setCurrentPolls((prev) => [...prev, ...newPolls]);
             setOffset(prev => prev+limit);

@@ -36,9 +36,13 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
                 'trendingPolls'=> function () {
-                    return Poll::withCount(['votes as recent_votes_count' => function ($query) {
-                        $query->where('public', true)->where('created_at', '>=', Carbon::now()->subWeek());
-                    }])->orderBy('created_at', 'desc')->take(5)->get();
+                    return Poll::with(['options', 'votes', 'user', 'reactions'])
+                        ->where('public', true) // Ensure the poll is public
+                        ->where('created_at', '>=', Carbon::now()->subDays(7)) // Only polls from the last 7 days
+                        ->withCount('reactions') // Count reactions for each poll
+                        ->orderBy('reactions_count', 'desc') // Sort by most reactions
+                        ->limit(5) // Get only the top 5
+                        ->get();
                 }
             ],
         ];

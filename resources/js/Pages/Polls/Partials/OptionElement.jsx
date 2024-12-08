@@ -6,9 +6,7 @@ export default function OptionElement({option, totalVotes, pollId, votes}) {
         'option_id': option.id
     });
     const castVote = () => {
-        console.log("click");
-
-        post('/vote', {
+            post('/vote', {
             preserveScroll: true
         });
     }

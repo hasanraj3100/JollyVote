@@ -30,7 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/polls', [PollController::class, 'index'])->name('polls.index');
     Route::get('/polls/create', [PollController::class, 'create'])->name('polls.create');
     Route::post('/polls', [PollController::class, 'store'])->name('polls.store');
-    Route::get('/polls/edit/{poll}', [PollController::class, 'edit'])->name('polls.edit');
+    Route::get('/polls/edit/{poll}', [PollController::class, 'edit'])->can('edit', 'poll')->name('polls.edit');
     Route::patch('/polls/{poll}', [PollController::class, 'update'])->name('polls.update');
     Route::get('/polls/{slug}', [PollController::class, 'show'])->name('polls.show');
 
