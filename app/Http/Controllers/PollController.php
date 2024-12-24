@@ -30,7 +30,7 @@ class PollController extends Controller
         $limit = $request->input('limit');
         $offset = $request->input('offset');
 
-        $polls = Poll::with(['options', 'votes', 'user', 'reactions'])
+        $polls = Poll::with(['options', 'votes', 'user', 'reactions', 'bookmarks'])
             ->where('public', true)
             ->orderBy('created_at', 'desc')
             ->skip($offset)
@@ -42,7 +42,7 @@ class PollController extends Controller
 
     public function fetchSinglePoll(Poll $poll) : JsonResponse
     {
-        $poll->load(['options', 'votes', 'user', 'reactions']);
+        $poll->load(['options', 'votes', 'user', 'reactions', 'bookmarks']);
         return response()->json(['poll' => $poll]);
     }
 
@@ -89,7 +89,7 @@ class PollController extends Controller
     public function show($slug): Response
     {
 
-        $poll = Poll::with(['options', 'votes', 'user', 'reactions'])->where('slug', $slug)->firstOrFail();
+        $poll = Poll::with(['options', 'votes', 'user', 'reactions', 'bookmarks'])->where('slug', $slug)->firstOrFail();
         return Inertia::render('Polls/Show', ['poll' => $poll]);
     }
 
@@ -157,7 +157,7 @@ class PollController extends Controller
     {
         $query = $request->query('query', '');
 
-        $polls = Poll::with(['options', 'votes', 'user', 'reactions'])->
+        $polls = Poll::with(['options', 'votes', 'user', 'reactions', 'bookmarks'])->
             where('public', true)->
             where('title', 'like', '%'.$query.'%')->
             get();

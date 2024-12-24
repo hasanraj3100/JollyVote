@@ -43,8 +43,19 @@ export default function Poll_forNewsFeed({poll, singleView=false, setModalOpen=n
         setModalOpen(o => !o);
     }
 
+    const handleAddBookmark = () => {
+        router.post(route('bookmarks.add'), {'poll_id': poll.id}, {
+            preserveScroll:true,
+            onSuccess: () => {
+                if(onChange) onChange(poll.id);
+            }
+        })
+    }
+
     const userReaction = !!poll.reactions.find(reaction => reaction.user_id === currentUserID);
+
     const reactionCount = poll.reactions.length;
+    const isBookmarked = !!poll.bookmarks.find(bookmark=> bookmark.user_id === currentUserID);
 
     return (
         <div className={'bg-white shadow-lg rounded px-8 m-1'}>
@@ -60,8 +71,9 @@ export default function Poll_forNewsFeed({poll, singleView=false, setModalOpen=n
                 </div>
                 <div className={'flex space-x-4 items-center ml-auto'}>
                     <span className={'text-sm text-gray-500 ml-auto'}><NiceDateTime dateString={poll.updated_at}/></span>
-                    <Button className={'flex items-center text-gray-500 text-lg'}>
-                        <ion-icon name={'bookmark-outline'}></ion-icon>
+                    <Button className={'flex items-center text-gray-500 text-lg hover:bg-gray-200 hover:font-bold'} onClick={handleAddBookmark}>
+                        <ion-icon name={isBookmarked ? 'bookmark' : 'bookmark-outline'}></ion-icon>
+
                     </Button>
 
                     {poll.user.id === currentUserID && (

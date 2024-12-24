@@ -41,6 +41,11 @@ class User extends Authenticatable
         return $this->hasMany(Vote::class);
     }
 
+    public function bookmarks(): HasMany
+    {
+        return $this->hasMany(Bookmark::class);
+    }
+
     /**
      * Get the attributes that should be cast.
      *

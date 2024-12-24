@@ -1,6 +1,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 import Poll_forNewsFeed from "@/Pages/Polls/Partials/Poll_For_NewsFeed.jsx";
 import {Head} from "@inertiajs/react";
+import SmallHeaderPanel from "@/Components/SmallHeaderPanel.jsx";
 
 export default function SearchResult({polls, query}) {
     const count = polls.length;
@@ -8,9 +9,9 @@ export default function SearchResult({polls, query}) {
     return (
         <AuthenticatedLayout>
             <Head title={"Search Result"}/>
-            <div className={'bg-white shadow-md p-6'}>
+            <SmallHeaderPanel>
                 <h1 className={'font-bold text-xl'}>{count} results found for "{query}": </h1>
-            </div>
+            </SmallHeaderPanel>
 
             {polls.map(poll => (
                 <Poll_forNewsFeed poll={poll}/>

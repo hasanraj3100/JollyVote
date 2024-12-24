@@ -34,6 +34,10 @@ class Poll extends Model
         return $this->hasMany(Reaction::class);
     }
 
+    public function bookmarks(): HasMany {
+        return $this->hasMany(Bookmark::class);
+    }
+
     public static function generateSlug($title) {
         $slug = Str::slug($title);
         $originalSlug = $slug;

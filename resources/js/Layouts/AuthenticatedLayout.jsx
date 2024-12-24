@@ -44,7 +44,7 @@ export default function AuthenticatedLayout({ header, children }) {
                         <div className="flex flex-col space-y-8 text-gray-500">
                             <NavLink name={'home'} active={route().current('polls.index')} href={route('polls.index')}>Home</NavLink>
                             <NavLink name={'notifications'} >Notifications</NavLink>
-                            <NavLink name={'bookmarks'}> Bookmarks </NavLink>
+                            <NavLink name={'bookmarks'} active={route().current('bookmarks.index')} href={route('bookmarks.index')}> Bookmarks </NavLink>
                             <NavLink name={'person'} active={route().current('profile.edit')} href={route('profile.edit')}> My Profile </NavLink>
                             <NavLink name={'log-out'} onClick={logout}> Logout </NavLink>
 
@@ -70,7 +70,10 @@ export default function AuthenticatedLayout({ header, children }) {
 
                         </NavLink>
                         <NavLink name={'notifications'} ></NavLink>
-                        <NavLink name={'bookmarks'}>  </NavLink>
+                        <NavLink
+                            name={'bookmarks'}
+                            active={route().current('bookmarks.index')}
+                            href={route('bookmarks.index')}> </NavLink>
                         <NavLink name={'person'} active={route().current('profile.edit')} href={route('profile.edit')}>
                             {route().current('profile.edit') && (
                                 <span className={`transition-all duration-300 ${route().current('profile.edit') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
