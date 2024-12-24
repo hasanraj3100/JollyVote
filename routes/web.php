@@ -26,6 +26,7 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
 
     Route::get('/api/polls', [PollController::class, 'fetchPosts'])->name('polls.fetch');
+    Route::get('/api/poll/{poll}', [PollController::class, 'fetchSinglePoll'])->name('polls.fetchSingle');
 
     Route::get('/polls', [PollController::class, 'index'])->name('polls.index');
     Route::get('/polls/create', [PollController::class, 'create'])->name('polls.create');

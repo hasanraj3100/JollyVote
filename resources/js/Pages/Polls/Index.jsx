@@ -1,26 +1,37 @@
-import {Head, router} from "@inertiajs/react";
+import {Head, router, usePage} from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 import Poll_forNewsFeed from "@/Pages/Polls/Partials/Poll_For_NewsFeed.jsx";
 import CategoryButton from "@/Components/CategoryButton.jsx";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {useInView} from "react-intersection-observer";
 
-export default function Index({polls}) {
-
+export default function Index() {
+    const currentUserID = usePage().props.auth.user.id;
     const [currentPolls, setCurrentPolls] = useState([]);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [offset, setOffset] = useState(0);
     const limit = 15;
 
+    //When user casts a vote or reacts, it fetches that poll again.
+    const handleChange = async (pollId) => {
+        try {
+            const response = await axios.get(route('polls.fetchSingle', pollId));
+            const newPoll = response.data.poll;
+
+
+            setCurrentPolls( (prevPolls) =>
+                prevPolls.map( (poll) => poll.id === newPoll.id ? newPoll: poll)
+            );
+
+
+        } catch (error) {
+            console.error("Error fetching poll: ", error);
+        }
+    }
+
     const {ref, inView} = useInView({triggerOnce: false});
 
-
-    useEffect(() => {
-        setCurrentPolls((prevCurrentPolls) =>
-            polls.filter((poll) => prevCurrentPolls.some((current) => current.id === poll.id))
-        );
-    }, [polls]);
     const fetchPolls = async() => {
         if(loading && !hasMore) return;
         setLoading(true);
@@ -68,7 +79,7 @@ export default function Index({polls}) {
             </div>
             <div className="lg:pb-1 pb-10">
                 {currentPolls.map(poll =>
-                    <Poll_forNewsFeed key={poll.id} poll={poll}/>
+                    <Poll_forNewsFeed key={poll.id} poll={poll} onChange={handleChange}/>
                 )}
                 {loading &&
                     <div className="loading-spinner flex justify-center items-center py-5">

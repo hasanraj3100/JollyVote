@@ -1,14 +1,20 @@
 import {useForm, usePage} from "@inertiajs/react";
 
-export default function OptionElement({option, totalVotes, pollId, votes}) {
+export default function OptionElement({option, totalVotes, pollId, votes, onVote=null}) {
     const {data, setData, post, processing, errors} = useForm({
         'poll_id': pollId,
         'option_id': option.id
     });
     const castVote = () => {
+
             post('/vote', {
-            preserveScroll: true
-        });
+            preserveScroll: true,
+                onSuccess: () => {
+                    if(onVote) onVote(pollId);
+                }
+        })
+
+
     }
 
     const {auth} = usePage().props;

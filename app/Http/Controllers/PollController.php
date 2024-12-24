@@ -15,12 +15,7 @@ class PollController extends Controller
 
     public function index() : Response
     {
-
-        $polls = Poll::with(['options', 'votes', 'user', 'reactions'])
-            ->where('public', true)
-            ->orderBy('updated_at', 'desc')
-            ->get();
-        return Inertia::render('Polls/Index', ['polls' => $polls]);
+        return Inertia::render('Polls/Index');
     }
 
     public function fetchPosts(Request $request): JsonResponse
@@ -43,6 +38,12 @@ class PollController extends Controller
             ->get();
 
         return response()->json(['polls' => $polls]);
+    }
+
+    public function fetchSinglePoll(Poll $poll) : JsonResponse
+    {
+        $poll->load(['options', 'votes', 'user', 'reactions']);
+        return response()->json(['poll' => $poll]);
     }
 
     public function create() : Response

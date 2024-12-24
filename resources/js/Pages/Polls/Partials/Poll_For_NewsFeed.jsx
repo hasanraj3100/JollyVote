@@ -4,7 +4,8 @@ import {Button} from "@headlessui/react";
 import NiceDateTime from "@/Components/NiceDateTime.jsx";
 
 
-export default function Poll_forNewsFeed({poll, singleView=false, setModalOpen=null}) {
+export default function Poll_forNewsFeed({poll, singleView=false, setModalOpen=null,
+                                             onChange = null}) {
 
     const currentUserID = usePage().props.auth.user.id;
 
@@ -24,16 +25,12 @@ export default function Poll_forNewsFeed({poll, singleView=false, setModalOpen=n
         });
     }
 
-    const viewTheAuthor = (e) => {
-        e.stopPropagation();
-        router.visit(`users/2`);
-    }
-
-
     const handleReact = (e) => {
         router.post(route('polls.react'), {'poll_id': poll.id}, {
             preserveScroll: true,
-
+            onSuccess: () => {
+                if(onChange) onChange(poll.id);
+            }
         })
     };
 
@@ -87,7 +84,7 @@ export default function Poll_forNewsFeed({poll, singleView=false, setModalOpen=n
             <div className="poll-container">
 
                 {voteCounts.map(option => (
-                    <OptionElement key={option.id} option={option} pollId={poll.id} totalVotes={totalVotes} votes={poll.votes}/>
+                    <OptionElement key={option.id} option={option} pollId={poll.id} totalVotes={totalVotes} votes={poll.votes} onVote={onChange}/>
                 ))}
 
             </div>
