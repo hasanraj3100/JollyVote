@@ -2,6 +2,7 @@ import {Link, router, usePage} from "@inertiajs/react";
 import OptionElement from "@/Pages/Polls/Partials/OptionElement.jsx";
 import {Button} from "@headlessui/react";
 import NiceDateTime from "@/Components/NiceDateTime.jsx";
+import UserAvatar from "@/Components/UserAvatar.jsx";
 
 
 export default function Poll_forNewsFeed({poll, singleView=false, setModalOpen=null,
@@ -60,11 +61,7 @@ export default function Poll_forNewsFeed({poll, singleView=false, setModalOpen=n
     return (
         <div className={'bg-white shadow-lg rounded px-8 m-1'}>
             <div className={'flex itemss-center mb-4 py-6'}>
-                <img
-                    src={'https://via.placeholder.com/40'}
-                    alt={`${poll.user.name} avatar`}
-                    className={'w-12 h-12 rounded-full mr-4'}
-                />
+                <UserAvatar name={poll.user.name}/>
                 <div>
                     <h3 className={'text-lg font-bold'}>{poll.user.name}</h3>
                     <span className={'text-sm text-gray-500 hover:text-blue-500'}>@{poll.user.name}</span>

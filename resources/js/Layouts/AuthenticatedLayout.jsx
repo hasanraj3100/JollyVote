@@ -7,6 +7,7 @@ import { useState } from 'react';
 import NavButtonSm from "@/Components/NavButtonSm.jsx";
 import {Button} from "@headlessui/react";
 import NiceDateTime from "@/Components/NiceDateTime.jsx";
+import UserAvatar from "@/Components/UserAvatar.jsx";
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
@@ -35,9 +36,8 @@ export default function AuthenticatedLayout({ header, children }) {
                 <aside className="bg-white lg:w-1/4 border-r-2 shadow-sm">
                     { /* Sidebar Desktop */}
                     <div className="hidden lg:flex flex-col items-start p-8 md:px-20">
-                        <div className={"flex items-center space-x-4 mb-8"}>
-                            <img className={"h-12 w-12 rounded-full"} src={"https://via.placeholder.com/40"}
-                                 alt={"user avatar"}/>
+                        <div className={"flex items-center mb-8"}>
+                            <UserAvatar name={user.name} size={12}/>
                             <span className={"font-bold text-lg text-gray-500"}>{user.name}</span>
                         </div>
                         {/* Menu Items */}
